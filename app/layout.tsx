@@ -1,12 +1,16 @@
+import { ClerkProvider } from '@clerk/nextjs/app-beta'
+
 export default function RootLayout({
-  children,
+  children
 }: {
   children: React.ReactNode
 }) {
   return (
-    <html>
-      <head />
-      <body>{children}</body>
-    </html>
+    <ClerkProvider>
+      <html>
+        <head />
+        <body>{children}</body>
+      </html>
+    </ClerkProvider>
   )
 }
