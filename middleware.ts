@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server'
 import { withClerkMiddleware, getAuth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
-const unauthenticedPaths = ['/auth*']
+const unauthenticedPaths = ['/sign-in', '/oauth']
 const authenticatedPaths = ['/dashboard*']
 
 const pathMatcher = (paths: string[], path: string): string =>
@@ -21,7 +21,7 @@ export default withClerkMiddleware((request: NextRequest) => {
     return NextResponse.redirect(new URL('/dashboard', request.url))
 
   if (isAuthenticatedRoute(request.nextUrl.pathname) && !userId)
-    return NextResponse.redirect(new URL('/auth/sign-in', request.url))
+    return NextResponse.redirect(new URL('/sign-in', request.url))
 
   return NextResponse.next()
 })

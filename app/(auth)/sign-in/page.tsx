@@ -10,7 +10,7 @@ export default function SignIn() {
   const onClick = (strategy: OAuthStrategy) =>
     signIn.authenticateWithRedirect({
       strategy,
-      redirectUrl: '/auth/oauth',
+      redirectUrl: '/oauth',
       redirectUrlComplete: '/dashboard'
     })
 
