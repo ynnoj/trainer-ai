@@ -12,6 +12,8 @@
     "@clerk/nextjs": "4.7.3",
     "@headlessui/react": "1.7.8",
     "@heroicons/react": "2.0.14",
+    "@supabase/auth-helpers-nextjs": "0.5.4",
+    "@supabase/supabase-js": "2.7.0",
     "eslint-config-next": "13.1.2",
     "next": "13.1.2",
     "react": "18.2.0",
