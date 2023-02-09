@@ -11,7 +11,7 @@ export default function SignIn() {
     signIn.authenticateWithRedirect({
       strategy,
       redirectUrl: '/oauth',
-      redirectUrlComplete: '/dashboard'
+      redirectUrlComplete: '/app'
     })
 
   return <button onClick={() => onClick('oauth_facebook')}>fb</button>
