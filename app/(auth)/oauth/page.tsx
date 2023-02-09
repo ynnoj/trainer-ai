@@ -1,10 +1,10 @@
 'use client'
 
-import * as React from 'react'
+import { useEffect } from 'react'
 import Clerk from '@clerk/clerk-js'
 
 export default function OAuth() {
-  React.useEffect(() => {
+  useEffect(() => {
     const clerk = new Clerk(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)
 
     async function handleCallback() {
