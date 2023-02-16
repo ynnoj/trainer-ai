@@ -2,18 +2,64 @@
 
 import type { OAuthStrategy } from '@clerk/types'
 
-import { Fragment } from 'react'
+import { Fragment, useReducer } from 'react'
 import { useSignIn } from '@clerk/nextjs'
 
+enum FormActionType {
+  LOADING = 'LOADING',
+  ERROR = 'ERROR'
+}
+
+interface FormState {
+  error: boolean
+  loading: boolean
+  message: string
+}
+
+interface FormAction {
+  type: FormActionType
+  payload?: Partial<FormState>
+}
+
+function formReducer(state: FormState, action: FormAction) {
+  switch (action.type) {
+    case FormActionType.ERROR:
+      return { ...state, error: true, loading: false, ...action.payload }
+    case FormActionType.LOADING:
+      return { ...state, error: false, loading: true, ...action.payload }
+    default: {
+      throw new Error(`Unhandled type: ${action.type}`)
+    }
+  }
+}
+
 export default function SignIn() {
+  const [formState, formDispatch] = useReducer(formReducer, {
+    error: false,
+    loading: false,
+    message: null
+  })
   const { signIn } = useSignIn()
 
-  const handleSocialSignIn = (strategy: OAuthStrategy) =>
-    signIn.authenticateWithRedirect({
-      strategy,
-      redirectUrl: '/oauth',
-      redirectUrlComplete: '/app'
-    })
+  const handleSocialSignIn = async (strategy: OAuthStrategy) => {
+    try {
+      formDispatch({
+        type: FormActionType.LOADING,
+        payload: { message: 'Signing you in to your account' }
+      })
+
+      await signIn.authenticateWithRedirect({
+        strategy,
+        redirectUrl: '/oauth',
+        redirectUrlComplete: '/app'
+      })
+    } catch (error) {
+      formDispatch({
+        type: FormActionType.ERROR,
+        payload: { message: 'There was an error signing you in' }
+      })
+    }
+  }
 
   return (
     <Fragment>
