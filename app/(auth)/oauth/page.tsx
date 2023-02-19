@@ -15,4 +15,6 @@ export default function OAuth() {
 
     handleCallback()
   }, [])
+
+  return 'loading'
 }
