@@ -17,6 +17,7 @@
     "@supabase/supabase-js": "2.7.0",
     "eslint-config-next": "13.1.2",
     "gpt-3-encoder": "1.1.4",
+    "markdown-to-jsx": "7.1.9",
     "next": "13.1.2",
     "openai": "3.1.0",
     "react": "18.2.0",
