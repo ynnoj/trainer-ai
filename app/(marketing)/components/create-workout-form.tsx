@@ -1,10 +1,15 @@
 'use client'
 
+import type { CreateCompletionRequest } from 'openai'
+
 import { Disclosure } from '@headlessui/react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { ChevronUpIcon } from '@heroicons/react/20/solid'
+
+import fetcher from '../../../lib/fetcher'
+import useFormState from '../../../lib/hooks/useFormState'
 
 const schema = z
   .object({
@@ -17,7 +22,7 @@ const schema = z
   })
   .required()
 
-type WorkoutInputs = z.infer<typeof schema>
+export type WorkoutInputs = z.infer<typeof schema>
 
 export default function CreateWorkoutForm() {
   const {
@@ -33,9 +38,24 @@ export default function CreateWorkoutForm() {
     },
     resolver: zodResolver(schema)
   })
+  const { formLoading, setFormError, setFormLoading, setFormSuccess } =
+    useFormState()
   const formValues = watch()
 
-  const onSubmit: SubmitHandler<WorkoutInputs> = (data) => console.log(data)
+  const onSubmit: SubmitHandler<WorkoutInputs> = async (data) => {
+    try {
+      setFormLoading()
+
+      await fetcher<CreateCompletionRequest>('/api/generate', {
+        body: JSON.stringify(data),
+        method: 'POST'
+      })
+
+      setFormSuccess()
+    } catch (error) {
+      setFormError({ message: error.message })
+    }
+  }
 
   return (
     <form
@@ -475,7 +495,10 @@ export default function CreateWorkoutForm() {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            className={`${
+              formLoading ? 'cursor-not-allowed opacity-50' : ''
+            } ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
+            disabled={formLoading}
           >
             Generate
           </button>
