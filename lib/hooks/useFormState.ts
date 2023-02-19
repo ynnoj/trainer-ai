@@ -75,12 +75,16 @@ function useFormState() {
     })
 
   const setFormSuccess = ({
-    message: formMessage = 'Success'
-  }: { message?: string } = {}) =>
+    message: formMessage = 'Success',
+    onSuccess
+  }: { message?: string; onSuccess?: () => void } = {}) => {
     formDispatch({
       type: FormActionType.SUCCESS,
       payload: { formMessage }
     })
+
+    if (onSuccess) onSuccess()
+  }
 
   return {
     ...formState,
