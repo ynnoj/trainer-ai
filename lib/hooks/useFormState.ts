@@ -62,7 +62,7 @@ function useFormState() {
     message: formMessage = 'Error'
   }: { message?: string } = {}) =>
     formDispatch({
-      type: FormActionType.LOADING,
+      type: FormActionType.ERROR,
       payload: { formMessage }
     })
 
