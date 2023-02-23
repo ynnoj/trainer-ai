@@ -2,7 +2,6 @@
 
 import type { CreateCompletionResponse } from 'openai'
 
-import { Fragment } from 'react'
 import { Disclosure } from '@headlessui/react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -67,15 +66,15 @@ export default function CreateWorkoutForm({
   }
 
   return (
-    <Fragment>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-8 divide-y divide-gray-200 px-6"
-      >
-        <div className="space-y-8 divide-y divide-gray-200">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex h-full flex-col divide-y divide-gray-200"
+    >
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-scroll px-6">
+        <div className="space-y-8 divide-y divide-gray-200 py-6">
           <Disclosure defaultOpen={true}>
             {({ open }) => (
-              <div className="space-y-6 pt-8">
+              <div className="space-y-6">
                 <Disclosure.Button
                   as="div"
                   className="flex items-center justify-between space-x-4"
@@ -89,13 +88,6 @@ export default function CreateWorkoutForm({
                         Choose the duration and type of your workout
                       </p>
                     </div>
-                    {open ? null : (
-                      <p className="mt-1 text-sm text-gray-500">
-                        {`${formValues.type.toUpperCase()}, ${
-                          formValues.duration
-                        } minutes`}
-                      </p>
-                    )}
                   </div>
                   <ChevronUpIcon
                     className={`${open ? 'rotate-180 transform' : ''} h-5 w-5 `}
@@ -177,9 +169,9 @@ export default function CreateWorkoutForm({
               </div>
             )}
           </Disclosure>
-          <Disclosure>
+          <Disclosure defaultOpen={true}>
             {({ open }) => (
-              <div className="space-y-6 pt-8">
+              <div className="space-y-6 pt-6">
                 <Disclosure.Button
                   as="div"
                   className="flex items-center justify-between space-x-4"
@@ -196,16 +188,9 @@ export default function CreateWorkoutForm({
                       >
                         {errors.movements
                           ? errors.movements.message
-                          : `Set the type of your workout`}
+                          : `Select up to 6 movements`}
                       </p>
                     </div>
-                    {open ? null : (
-                      <p className="mt-1 text-sm text-gray-500">
-                        {Boolean(formValues.movements.length)
-                          ? `${formValues.movements.length} selected`
-                          : `None selected`}
-                      </p>
-                    )}
                   </div>
                   <ChevronUpIcon
                     className={`${open ? 'rotate-180 transform' : ''} h-5 w-5 `}
@@ -503,20 +488,18 @@ export default function CreateWorkoutForm({
             )}
           </Disclosure>
         </div>
-        <div className="pt-5">
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className={`${
-                formLoading ? 'cursor-not-allowed opacity-50' : ''
-              } ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
-              disabled={formLoading}
-            >
-              Generate
-            </button>
-          </div>
-        </div>
-      </form>
-    </Fragment>
+      </div>
+      <div className="flex flex-shrink-0 justify-end px-4 py-4">
+        <button
+          type="submit"
+          className={`${
+            formLoading ? 'cursor-not-allowed opacity-50' : ''
+          } ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
+          disabled={formLoading}
+        >
+          Generate
+        </button>
+      </div>
+    </form>
   )
 }

@@ -29,10 +29,7 @@ export default function AppPageLayout({
   }
 
   const userNavigation = useMemo(
-    () => [
-      { name: 'Your Profile', onClick: () => console.log('profile') },
-      { name: 'Sign out', onClick: () => handleSignOut() }
-    ],
+    () => [{ name: 'Sign out', onClick: () => handleSignOut() }],
     []
   )
 
