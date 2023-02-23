@@ -2,12 +2,11 @@
 
 import type { CreateCompletionResponse } from 'openai'
 
-import { Fragment, useState } from 'react'
+import { Fragment } from 'react'
 import { Disclosure } from '@headlessui/react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import Markdown from 'markdown-to-jsx'
 import { ChevronUpIcon } from '@heroicons/react/20/solid'
 
 import fetcher from '../../../lib/fetcher'
@@ -26,7 +25,13 @@ const schema = z
 
 export type WorkoutInputs = z.infer<typeof schema>
 
-export default function CreateWorkoutForm() {
+export default function CreateWorkoutForm({
+  updateWorkouts
+}: {
+  updateWorkouts: React.Dispatch<
+    React.SetStateAction<CreateCompletionResponse[]>
+  >
+}) {
   const {
     register,
     formState: { errors },
@@ -42,19 +47,20 @@ export default function CreateWorkoutForm() {
   })
   const { formLoading, setFormError, setFormLoading, setFormSuccess } =
     useFormState()
-  const [workout, setWorkout] = useState<CreateCompletionResponse>(null)
   const formValues = watch()
 
   const onSubmit: SubmitHandler<WorkoutInputs> = async (data) => {
     try {
       setFormLoading()
 
-      const res = await fetcher<CreateCompletionResponse>('/api/generate', {
+      const workout = await fetcher<CreateCompletionResponse>('/api/generate', {
         body: JSON.stringify(data),
         method: 'POST'
       })
 
-      setFormSuccess({ onSuccess: () => setWorkout(res) })
+      setFormSuccess({
+        onSuccess: () => updateWorkouts((workouts) => [...workouts, workout])
+      })
     } catch (error) {
       setFormError({ message: error.message })
     }
@@ -64,7 +70,7 @@ export default function CreateWorkoutForm() {
     <Fragment>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="mx-auto space-y-8 divide-y divide-gray-200 px-4 lg:w-1/2"
+        className="space-y-8 divide-y divide-gray-200 px-6"
       >
         <div className="space-y-8 divide-y divide-gray-200">
           <Disclosure defaultOpen={true}>
@@ -511,7 +517,6 @@ export default function CreateWorkoutForm() {
           </div>
         </div>
       </form>
-      {workout ? <Markdown>{workout.choices[0].text}</Markdown> : null}
     </Fragment>
   )
 }
