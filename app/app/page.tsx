@@ -24,9 +24,7 @@ export default function App() {
           ))}
         </section>
       </main>
-      <aside className="hidden w-96 overflow-y-auto border-l border-gray-200 bg-white lg:block">
-        <CreateWorkoutForm updateWorkouts={setWorkouts} />
-      </aside>
+      <CreateWorkoutForm updateWorkouts={setWorkouts} />
     </Fragment>
   )
 }
