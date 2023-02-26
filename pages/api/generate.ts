@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import type { WorkoutInputs } from '../../app/(marketing)/components/create-workout-form'
+import type { WorkoutInputs } from '../../app/app/components/generate-workout-form'
 
 import { Configuration, OpenAIApi } from 'openai'
 import { encode } from 'gpt-3-encoder'

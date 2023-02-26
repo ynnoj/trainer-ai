@@ -4,7 +4,7 @@ import type { CreateCompletionResponse } from 'openai'
 
 import { Fragment, useState } from 'react'
 
-import CreateWorkoutForm from '../(marketing)/components/create-workout-form'
+import GenerateWorkoutForm from './components/generate-workout-form'
 
 export default function App() {
   const [workouts, setWorkouts] = useState<CreateCompletionResponse[]>([])
@@ -24,7 +24,7 @@ export default function App() {
           ))}
         </section>
       </main>
-      <CreateWorkoutForm updateWorkouts={setWorkouts} />
+      <GenerateWorkoutForm updateWorkouts={setWorkouts} />
     </Fragment>
   )
 }

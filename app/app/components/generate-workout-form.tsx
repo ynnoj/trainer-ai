@@ -30,7 +30,7 @@ const schema = z
 
 export type WorkoutInputs = z.infer<typeof schema>
 
-export default function CreateWorkoutForm({
+export default function GenerateWorkoutForm({
   updateWorkouts
 }: {
   updateWorkouts: React.Dispatch<
