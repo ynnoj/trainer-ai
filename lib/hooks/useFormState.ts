@@ -59,20 +59,28 @@ function useFormState() {
   })
 
   const setFormError = ({
-    message: formMessage = 'Error'
-  }: { message?: string } = {}) =>
+    message: formMessage = 'Error',
+    onError
+  }: { message?: string; onError?: () => void } = {}) => {
     formDispatch({
       type: FormActionType.ERROR,
       payload: { formMessage }
     })
 
+    if (onError) onError()
+  }
+
   const setFormLoading = ({
-    message: formMessage = 'Loading'
-  }: { message?: string } = {}) =>
+    message: formMessage = 'Loading',
+    onLoading
+  }: { message?: string; onLoading?: () => void } = {}) => {
     formDispatch({
       type: FormActionType.LOADING,
       payload: { formMessage }
     })
+
+    if (onLoading) onLoading()
+  }
 
   const setFormSuccess = ({
     message: formMessage = 'Success',
