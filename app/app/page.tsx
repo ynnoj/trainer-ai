@@ -1,13 +1,13 @@
 'use client'
 
-import type { CreateCompletionResponse } from 'openai'
+import type { CreateChatCompletionResponse } from 'openai'
 
 import { Fragment, useState } from 'react'
 
 import GenerateWorkoutForm from './components/generate-workout-form'
 
 export default function App() {
-  const [workouts, setWorkouts] = useState<CreateCompletionResponse[]>([])
+  const [workouts, setWorkouts] = useState<CreateChatCompletionResponse[]>([])
 
   return (
     <Fragment>
@@ -19,7 +19,7 @@ export default function App() {
           <h1 id="primary-heading" className="sr-only">
             Workouts
           </h1>
-          {workouts.map((workout: CreateCompletionResponse) => (
+          {workouts.map((workout: CreateChatCompletionResponse) => (
             <pre key={workout.id}>{JSON.stringify(workout, null, 2)}</pre>
           ))}
         </section>

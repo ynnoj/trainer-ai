@@ -1,12 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { WorkoutInputs } from '../../app/app/components/generate-workout-form'
+import type {
+  CreateChatCompletionRequest,
+  CreateChatCompletionResponse
+} from 'openai'
 
-import { Configuration, OpenAIApi } from 'openai'
-import { encode } from 'gpt-3-encoder'
-
-const openai = new OpenAIApi(
-  new Configuration({ apiKey: process.env.OPENAI_API_KEY })
-)
+import fetcher, { CustomError } from '../../lib/fetcher'
 
 const generateAmrapPrompt = ({ duration, movements }: WorkoutInputs): string =>
   `Create me a ${duration} minute AMRAP style workout, using only the following movements:
@@ -55,21 +54,28 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
     const prompt = generatePrompt(req.body.type)
 
-    const { data: workout } = await openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt,
-      temperature: 0.8,
-      max_tokens: Number(4096 - encode(prompt).length)
-    })
+    const workout = await fetcher<CreateChatCompletionResponse>(
+      'https://api.openai.com/v1/chat/completions',
+      {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
+        body: JSON.stringify({
+          model: 'gpt-3.5-turbo',
+          messages: [
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          temperature: 0.8
+        } as CreateChatCompletionRequest)
+      }
+    )
 
     res.status(201).json(workout)
-  } catch ({
-    response: {
-      data: { error },
-      status
-    }
-  }) {
-    console.log(error)
-    res.status(status).json({ error })
+  } catch (error) {
+    const { info, status } = error as CustomError
+
+    res.status(status).json(info)
   }
 }

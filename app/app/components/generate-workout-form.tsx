@@ -1,6 +1,9 @@
 'use client'
 
-import type { CreateCompletionResponse } from 'openai'
+import type {
+  CreateChatCompletionRequest,
+  CreateChatCompletionResponse
+} from 'openai'
 
 import { Fragment } from 'react'
 import { Dialog, Disclosure, Transition } from '@headlessui/react'
@@ -34,7 +37,7 @@ export default function GenerateWorkoutForm({
   updateWorkouts
 }: {
   updateWorkouts: React.Dispatch<
-    React.SetStateAction<CreateCompletionResponse[]>
+    React.SetStateAction<CreateChatCompletionResponse[]>
   >
 }) {
   const {
@@ -59,10 +62,13 @@ export default function GenerateWorkoutForm({
         onLoading: () => toggleOpen()
       })
 
-      const workout = await fetcher<CreateCompletionResponse>('/api/generate', {
-        body: JSON.stringify(data),
-        method: 'POST'
-      })
+      const workout = await fetcher<CreateChatCompletionResponse>(
+        '/api/generate',
+        {
+          body: JSON.stringify(data),
+          method: 'POST'
+        }
+      )
 
       setFormSuccess({
         onSuccess: () => updateWorkouts((workouts) => [...workouts, workout])
