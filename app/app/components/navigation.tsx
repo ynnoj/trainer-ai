@@ -1,15 +1,18 @@
+import type { User } from '@clerk/nextjs/dist/api'
+
 import { Fragment, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useClerk } from '@clerk/nextjs'
 import { Menu, Transition } from '@headlessui/react'
 import { PlusIcon } from '@heroicons/react/24/outline'
+
 import { useApplicationDispatch } from '../../../lib/hooks/useApplicationState'
 
-function classNames(...classes) {
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Navigation({ user }) {
+export default function Navigation({ user }: { user: Partial<User> }) {
   const { signOut } = useClerk()
   const { toggleOpen } = useApplicationDispatch()
   const router = useRouter()

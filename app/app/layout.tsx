@@ -8,7 +8,7 @@ export default async function AppLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { profileImageUrl }: User | null = await currentUser()
+  const user: User | null = await currentUser()
 
-  return <AppPageLayout user={{ profileImageUrl }}>{children}</AppPageLayout>
+  return <AppPageLayout user={user!}>{children}</AppPageLayout>
 }

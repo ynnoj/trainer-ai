@@ -13,7 +13,7 @@ import * as z from 'zod'
 import { ChevronUpIcon } from '@heroicons/react/20/solid'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
-import fetcher from '../../../lib/fetcher'
+import fetcher, { CustomError } from '../../../lib/fetcher'
 import useFormState from '../../../lib/hooks/useFormState'
 import {
   useApplicationDispatch,
@@ -71,10 +71,16 @@ export default function GenerateWorkoutForm({
       )
 
       setFormSuccess({
-        onSuccess: () => updateWorkouts((workouts) => [...workouts, workout])
+        onSuccess: () =>
+          updateWorkouts((workouts) => [
+            ...workouts,
+            workout as CreateChatCompletionResponse
+          ])
       })
     } catch (error) {
-      setFormError({ message: error.message })
+      const { message } = error as CustomError
+
+      setFormError({ message })
     }
   }
 

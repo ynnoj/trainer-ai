@@ -1,10 +1,13 @@
-interface CustomError extends Error {
+export interface CustomError extends Error {
   info: Record<string, never>
   status: number
 }
 
-async function fetcher<T>(input: RequestInfo, init?: RequestInit): Promise<T> {
-  const { body, headers, method = 'GET' } = init
+async function fetcher<T>(
+  input: RequestInfo,
+  init?: RequestInit
+): Promise<T | CustomError> {
+  const { body, headers, method = 'GET' } = init || {}
 
   const res = await fetch(input, {
     method,

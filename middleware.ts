@@ -6,13 +6,13 @@ import { NextResponse } from 'next/server'
 const unauthenticedPaths = ['/sign-in', '/oauth']
 const authenticatedPaths = ['/app*']
 
-const pathMatcher = (paths: string[], path: string): string =>
+const pathMatcher = (paths: string[], path: string): string | undefined =>
   paths.find((x) => path.match(new RegExp(`^${x}$`.replace('*$', '($|/)'))))
 
-const isAuthenticatedRoute = (path: string): string =>
-  pathMatcher(authenticatedPaths, path)
-const isUnauthenticatedRoute = (path: string): string =>
-  pathMatcher(unauthenticedPaths, path)
+const isAuthenticatedRoute = (path: string): boolean =>
+  !!pathMatcher(authenticatedPaths, path)
+const isUnauthenticatedRoute = (path: string): boolean =>
+  !!pathMatcher(unauthenticedPaths, path)
 
 export default withClerkMiddleware((request: NextRequest) => {
   const { userId } = getAuth(request)

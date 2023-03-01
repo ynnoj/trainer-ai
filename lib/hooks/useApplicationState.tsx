@@ -1,7 +1,17 @@
 import { createContext, useCallback, useContext, useState } from 'react'
 
-const ApplicationStateContext = createContext(null)
-const ApplicationDispatchContext = createContext(null)
+interface ApplicationStateContextType {
+  open: boolean
+}
+interface ApplicationDispatchContextType {
+  toggleOpen: () => void
+}
+
+const ApplicationStateContext = createContext<ApplicationStateContextType>(
+  null!
+)
+const ApplicationDispatchContext =
+  createContext<ApplicationDispatchContextType>(null!)
 
 function ApplicationProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState<boolean>(false)

@@ -9,7 +9,7 @@ enum FormActionType {
 interface FormState {
   formError: boolean
   formLoading: boolean
-  formMessage: string
+  formMessage: string | null
   formSuccess: boolean
 }
 

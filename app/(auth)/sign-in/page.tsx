@@ -15,7 +15,7 @@ export default function SignIn() {
     try {
       setFormLoading({ message: 'Signing you in to your account' })
 
-      await signIn.authenticateWithRedirect({
+      await signIn?.authenticateWithRedirect({
         strategy,
         redirectUrl: '/oauth',
         redirectUrlComplete: '/app'
