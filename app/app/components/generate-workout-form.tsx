@@ -1,9 +1,6 @@
 'use client'
 
-import type {
-  CreateChatCompletionRequest,
-  CreateChatCompletionResponse
-} from 'openai'
+import type { CreateChatCompletionResponse } from 'openai'
 
 import { Fragment } from 'react'
 import { Dialog, Disclosure, Transition } from '@headlessui/react'
