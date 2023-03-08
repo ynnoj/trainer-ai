@@ -76,7 +76,7 @@ export default function Navigation({ user }: { user: Partial<User> }) {
             <button
               onClick={toggleOpen}
               type="button"
-              className="flex items-center justify-center rounded-full bg-indigo-600 p-1 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              className="flex items-center justify-center rounded-full bg-indigo-600 p-1 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 lg:hidden"
             >
               <PlusIcon className="h-6 w-6" aria-hidden="true" />
               <span className="sr-only">Create workout</span>

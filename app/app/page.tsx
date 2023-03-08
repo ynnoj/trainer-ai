@@ -5,8 +5,15 @@ import type { CreateChatCompletionResponse } from 'openai'
 import { Fragment, useState } from 'react'
 
 import GenerateWorkoutForm from './components/generate-workout-form'
+import SlideOver from '../components/slide-over'
+import {
+  useApplicationDispatch,
+  useApplicationState
+} from '../../lib/hooks/useApplicationState'
 
 export default function App() {
+  const { toggleOpen } = useApplicationDispatch()
+  const { open } = useApplicationState()
   const [workouts, setWorkouts] = useState<CreateChatCompletionResponse[]>([])
 
   return (
@@ -24,7 +31,21 @@ export default function App() {
           ))}
         </section>
       </main>
-      <GenerateWorkoutForm updateWorkouts={setWorkouts} />
+      <aside className="hidden w-96 border-l lg:block">
+        <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+          <div className="border-b px-4 py-6 sm:px-6">
+            <div className="flex items-start justify-between">
+              <h2 className="text-xl font-semibold leading-6 text-gray-900">
+                Generate workout
+              </h2>
+            </div>
+          </div>
+          <GenerateWorkoutForm updateWorkouts={setWorkouts} />
+        </div>
+      </aside>
+      <SlideOver open={open} toggleOpen={toggleOpen}>
+        <GenerateWorkoutForm updateWorkouts={setWorkouts} />
+      </SlideOver>
     </Fragment>
   )
 }
