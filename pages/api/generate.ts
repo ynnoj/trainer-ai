@@ -1,9 +1,12 @@
+import type { AuthObject } from '@clerk/nextjs/dist/api'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { WorkoutInputs } from '../../app/app/components/generate-workout-form'
 import type {
   CreateChatCompletionRequest,
   CreateChatCompletionResponse
 } from 'openai'
+
+import { getAuth } from '@clerk/nextjs/server'
 
 import fetcher, { CustomError } from '../../lib/fetcher'
 
@@ -41,14 +44,18 @@ Workout:`
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   try {
-    const generatePrompt = (type: WorkoutInputs['type']): string => {
+    const { userId }: AuthObject = getAuth(req)
+
+    if (!userId) return res.status(401).json({ message: 'Please authenticate' })
+
+    const generatePrompt = (type: WorkoutInputs['type']): string | void => {
       switch (type) {
         case 'amrap':
           return generateAmrapPrompt(req.body as WorkoutInputs)
         case 'emom':
           return generateEmomPrompt(req.body as WorkoutInputs)
         default:
-          throw new Error(`Unknown workout type: ${type}`)
+          return res.status(400).json({ message: 'Invalid workout type' })
       }
     }
 
@@ -76,6 +83,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   } catch (error) {
     const { info, status } = error as CustomError
 
-    res.status(status).json(info)
+    res.status(status).json({ message: info.message })
   }
 }
