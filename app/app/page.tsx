@@ -44,7 +44,10 @@ export default function App() {
         </div>
       </aside>
       <SlideOver open={open} toggleOpen={toggleOpen}>
-        <GenerateWorkoutForm updateWorkouts={setWorkouts} />
+        <GenerateWorkoutForm
+          onLoading={toggleOpen}
+          updateWorkouts={setWorkouts}
+        />
       </SlideOver>
     </Fragment>
   )

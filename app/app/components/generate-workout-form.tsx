@@ -10,7 +10,6 @@ import { ChevronUpIcon } from '@heroicons/react/20/solid'
 
 import fetcher, { CustomError } from '../../../lib/fetcher'
 import useFormState from '../../../lib/hooks/useFormState'
-import { useApplicationDispatch } from '../../../lib/hooks/useApplicationState'
 
 const schema = z
   .object({
@@ -26,8 +25,10 @@ const schema = z
 export type WorkoutInputs = z.infer<typeof schema>
 
 export default function GenerateWorkoutForm({
+  onLoading,
   updateWorkouts
 }: {
+  onLoading?: () => void
   updateWorkouts: React.Dispatch<
     React.SetStateAction<CreateChatCompletionResponse[]>
   >
@@ -44,14 +45,14 @@ export default function GenerateWorkoutForm({
     },
     resolver: zodResolver(schema)
   })
-  const { toggleOpen } = useApplicationDispatch()
   const { setFormError, setFormLoading, setFormSuccess } = useFormState()
 
   const onSubmit: SubmitHandler<WorkoutInputs> = async (data) => {
     try {
-      setFormLoading({
-        onLoading: () => toggleOpen()
-      })
+      if (onLoading)
+        setFormLoading({
+          onLoading: () => onLoading()
+        })
 
       const workout = await fetcher<CreateChatCompletionResponse>(
         '/api/generate',
