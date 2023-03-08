@@ -7,8 +7,10 @@ import type {
 } from 'openai'
 
 import { getAuth } from '@clerk/nextjs/server'
+import { Ratelimit } from '@upstash/ratelimit'
 
 import fetcher, { CustomError } from '../../lib/fetcher'
+import redis from '../../utils/redis'
 
 const generateAmrapPrompt = ({ duration, movements }: WorkoutInputs): string =>
   `Create me a ${duration} minute AMRAP style workout, using only the following movements:
@@ -47,6 +49,22 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     const { userId }: AuthObject = getAuth(req)
 
     if (!userId) return res.status(401).json({ message: 'Please authenticate' })
+
+    const ratelimit = new Ratelimit({
+      redis,
+      limiter: Ratelimit.fixedWindow(5, '7 d'),
+      analytics: true
+    })
+
+    const result = await ratelimit.limit(userId)
+
+    res.setHeader('X-RateLimit-Limit', result.limit)
+    res.setHeader('X-RateLimit-Remaining', result.remaining)
+
+    if (!result.success)
+      return res.status(429).json({
+        message: `You've reached the limit of ${result.limit} workouts per week`
+      })
 
     const generatePrompt = (type: WorkoutInputs['type']): string | void => {
       switch (type) {
